@@ -84,20 +84,16 @@ $(document).ready(function() {
 
 	// POST add a product
 	$(document).on('click', '.add', function() {
-		console.log('in here!');
 		var form = $('.add-form');
-		form.slideDown();
 		var button = $(this);
 		button.toggleClass('SeeOrHide');
     if(button.hasClass('SeeOrHide')){
         button.text('Cancel'); 
-
+        form.slideDown();
     } else {
         button.text('Add Product');
         form.slideUp(); 
     }
-
-
 		$('#new_product').on('submit', function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -113,6 +109,21 @@ $(document).ready(function() {
 
 
 
+	// GET /products/id - lists a single product
+	$(document).on('click', '.delete', function() {
+		var id = $(this).closest('tr').data().id;
+		var row = $(this).closest('tr');
+		$.ajax({
+			url: baseUrl + '/' + id,
+			type: 'DELETE',
+			dataType: 'JSON'
+		}).done( function(data) {
+			console.log(row);
+			row.remove();
+		})
+	})
+
+
 
 	// // PUT /products/id - update a product( hint: use data to update)
 	// $(document).on('click', '.add', function() {
@@ -122,11 +133,5 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
-//    DELETE /products/id - delete a product (no data needed)
 
 })
