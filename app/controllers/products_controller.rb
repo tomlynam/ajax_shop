@@ -10,5 +10,12 @@ class ProductsController < ApplicationController
   end
 
   def edit
+    @product_id = params[:id]
   end
+
+  private
+
+  def product_params
+  end
+
 end

@@ -1,2 +1,17 @@
-<h1>Products#new</h1>
-<p>Find me in app/views/products/new.html.erb</p>
+<br>
+
+<h1>Add Product</h1>
+
+<br>
+
+<form id='new_product' class='form-group'>
+	<input class='form-control' placeholder='name' name='product[name]' required=true /><br>
+	<input class='form-control' placeholder='price' name='product[base_price]' required=true /><br>
+	<input class='form-control' placeholder='description' name='product[description]' required=true /><br>
+	<input class='form-control' placeholder='quantity' name='product[quanity_on_hand]' required=true /><br>
+	<input class='form-control' placeholder='color' name='product[color]' required=true /><br>
+	<input class='form-control' placeholder='weight' name='product[weight]' required=true /><br>
+
+	<button class='btn btn-primary' type='submit'>Add</button>
+
+</form>

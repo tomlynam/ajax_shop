@@ -24,8 +24,9 @@ $(document).ready(function() {
               row += '<td>' + color + '</td>';
               row += '<td>' + weight + '</td>';
               row += '<td>'
-              row += '<button class="btn btn-danger delete">Delete</button>';
               row += '<button class="btn btn-primary show">Show</button>';
+              row += '<button class="btn btn-warning edit">Edit</button>';
+              row += '<button class="btn btn-danger delete">Delete</button>';
               row += '</td>';
               row += '</tr>';
 	            tbody.append(row);
@@ -41,60 +42,60 @@ $(document).ready(function() {
 
 	// GET /products/id - lists a single product
 	$(document).on('click', '.show', function() {
-			var id = $(this).closest('tr').data().id;
-			location.pathname = '/products/' + id;
-		})
-
-	var re = /\/products\/\d+/;
-	if (location.pathname.match(re)) {
-		var panel = $('#panel');
-		var id = panel.data().id;
+		var id = $(this).closest('tr').data().id;
+		var row = $(this).closest('tr');
+		var list = $('#product');
+		var button = $(this);
+    button.toggleClass('SeeOrHide');
+    if(button.hasClass('SeeOrHide')){
+        button.text('Hide');         
+    } else {
+        button.text('Show');
+    }
 		$.ajax({
 			url: baseUrl + '/' + id,
 			type: 'GET',
 			dataType: 'JSON'
 		}).done( function(data) {
-			var product = data.product;
-			panel.children('#heading').html(product.name);
-			var list = $('#product');
-			var name = '<li>Name: ' + product.first_name + '</li>';
-			var price = '<li>Price: $' + product.base_price + '</li>';
-			var desc = '<li>Description: ' + product.description + '</li>';
-			var quantity = '<li>Quantity: ' + product.quanity_on_hand + '</li>';
-			var color = '<li>Color: ' + product.color + '</li>';
-			var weight = '<li>Weight: ' + product.weight + '</li>';
-			list.append(name);
-			list.append(price);
-			list.append(desc);
-			list.append(quantity);
-			list.append(color);
-			list.append(weight);
+			if (list.children().length > 0 ) {
+				list.children().remove();
+			}	else {
+				var product = data.product;
+				var name = '<li>Name: ' + product.name + '</li>';
+				var price = '<li>Price: $' + product.base_price + '</li>';
+				var desc = '<li>Description: ' + product.description + '</li>';
+				var quantity = '<li>Quantity: ' + product.quanity_on_hand + '</li>';
+				var color = '<li>Color: ' + product.color + '</li>';
+				var weight = '<li>Weight: ' + product.weight + '</li>';
+				list.append(name);
+				list.append(price);
+				list.append(desc);
+				list.append(quantity);
+				list.append(color);
+				list.append(weight);
+				$(row).after(slideToggle(list));
+			}
 		})
-	}
+	})
 
+	// PUT /products/id - update a product( hint: use data to update)
+	$(document).on('click', '.edit', function() {
+			var id = $(this).closest('tr').data().id;
+			location.pathname = '/products/' + id + '/edit';
+	})
 
-
-
-
-
-
-// POST /products
-//   POST DATA:
-//     product[name] - required
-//     product[base_price] - optional
-//     product[description] - optional  
-//     product[quanity_on_hand] - optional  
-//     product[color] - optional
-//     product[weight] - optional  
-//     product[other_attributes][] - optional - (hint: http://stackoverflow.com/questions/8890524/pass-array-to-ajax-request-in-ajax)
-
-
-//    PUT /products/id - update a product( hint: use data to update)
-
-
+	$('#new_product').on('submit', function(e) {
+		e.preventDefault();
+		$.ajax({
+			url: baseUrl,
+			type: 'POST',
+			dataType: 'JSON',
+			data: $(this).serializeArray()
+		}).done( function() {
+			location.pathname = '/';
+		});
+	})
 
 //    DELETE /products/id - delete a product (no data needed)
-
-
 
 })
