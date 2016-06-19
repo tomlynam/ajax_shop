@@ -116,7 +116,6 @@ $(document).ready(function() {
 			type: 'DELETE',
 			dataType: 'JSON'
 		}).done( function(data) {
-			console.log(row);
 			row.remove();
 		})
 	})
@@ -125,7 +124,7 @@ $(document).ready(function() {
 	// PUT /products/id - update a product( hint: use data to update)
 	$(document).on('click', '.edit', function() {
 		var id = $(this).closest('tr').data().id;
-		console.log('made it!');
+		
 		var form = $('.add-form');
 		var button = $('.add');
 		button.toggleClass('SeeOrHide');
@@ -142,13 +141,24 @@ $(document).ready(function() {
 			dataType: 'JSON'
 		}).done( function(data) {
 			var product = data.product;
-			console.log(product.name);
 			$('#product_name').val(product.name);
 			$('#product_price').val(product.base_price);
 			$('#product_description').val(product.description);
 			$('#product_quantity').val(product.quanity);
 			$('#product_color').val(product.color);
 			$('#product_weight').val(product.weight);
+		});
+		$('#new_product').on('submit', function(e) {
+			console.log('made it!');
+			e.preventDefault();
+			$.ajax({
+				url: baseUrl + '/' + id,
+				type: 'PUT',
+				dataType: 'JSON',
+				data: $(this).serializeArray()
+			}).done( function() {
+				location.pathname = '/';
+			});
 		});
 	})
 
