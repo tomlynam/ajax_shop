@@ -9,6 +9,8 @@ $(document).ready(function() {
 	      type: 'GET',
 	      dataType: 'JSON'
 	    }).done( function(data) {
+				var form = $('.add-form');
+				form.slideToggle();
 				var tbody = $('#products');
 	      tbody.children().remove();
 	      data.products.forEach( function(product) {
@@ -58,7 +60,7 @@ $(document).ready(function() {
 			dataType: 'JSON'
 		}).done( function(data) {
 			if (list.children().length > 0 ) {
-				list.children().remove();
+		    list.children().remove();
 			}	else {
 				var product = data.product;
 				var name = '<li>Name: ' + product.name + '</li>';
@@ -73,28 +75,57 @@ $(document).ready(function() {
 				list.append(quantity);
 				list.append(color);
 				list.append(weight);
-				$(row).after(slideToggle(list));
+				$(row).after(list);
 			}
 		})
 	})
 
-	// PUT /products/id - update a product( hint: use data to update)
-	$(document).on('click', '.edit', function() {
-			var id = $(this).closest('tr').data().id;
-			location.pathname = '/products/' + id + '/edit';
+
+
+	// POST add a product
+	$(document).on('click', '.add', function() {
+		console.log('in here!');
+		var form = $('.add-form');
+		form.slideDown();
+		var button = $(this);
+		button.toggleClass('SeeOrHide');
+    if(button.hasClass('SeeOrHide')){
+        button.text('Cancel'); 
+
+    } else {
+        button.text('Add Product');
+        form.slideUp(); 
+    }
+
+
+		$('#new_product').on('submit', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: baseUrl,
+				type: 'POST',
+				dataType: 'JSON',
+				data: $(this).serializeArray()
+			}).done( function() {
+				location.pathname = '/';
+			});
+		})
 	})
 
-	$('#new_product').on('submit', function(e) {
-		e.preventDefault();
-		$.ajax({
-			url: baseUrl,
-			type: 'POST',
-			dataType: 'JSON',
-			data: $(this).serializeArray()
-		}).done( function() {
-			location.pathname = '/';
-		});
-	})
+
+
+
+	// // PUT /products/id - update a product( hint: use data to update)
+	// $(document).on('click', '.add', function() {
+	// 		var id = $(this).closest('tr').data().id;
+	// 		location.pathname = '/products/' + id + '/edit';
+	// })
+
+
+
+
+
+
+
 
 //    DELETE /products/id - delete a product (no data needed)
 

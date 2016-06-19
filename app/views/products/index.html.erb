@@ -1,6 +1,22 @@
 <h1>Welcome to our store!</h1>
 
-<%= link_to 'Add Product', new_product_path, class: 'center btn btn-info' %>
+<!-- link_to 'Add Product', new_product_path, class: 'center btn btn-info' -->
+
+<button class='btn btn-info add'>Add Product</button>
+
+<div class='add-form'>
+	<form id='new_product' class='form-group'>
+		<br>
+		<input class='form-control' placeholder='name' name='product[name]' required=true /><br>
+		<input class='form-control' placeholder='price' name='product[base_price]' required=true /><br>
+		<input class='form-control' placeholder='description' name='product[description]' required=true /><br>
+		<input class='form-control' placeholder='quantity' name='product[quanity_on_hand]' required=true /><br>
+		<input class='form-control' placeholder='color' name='product[color]' required=true /><br>
+		<input class='form-control' placeholder='weight' name='product[weight]' required=true /><br>
+		<button class='btn btn-primary' type='submit'>Add</button>
+	</form>
+</div>
+
 
 <table class='table table-striped table-responsive'>
 
