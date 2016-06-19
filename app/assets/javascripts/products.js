@@ -81,7 +81,6 @@ $(document).ready(function() {
 	})
 
 
-
 	// POST add a product
 	$(document).on('click', '.add', function() {
 		var form = $('.add-form');
@@ -108,8 +107,7 @@ $(document).ready(function() {
 	})
 
 
-
-	// GET /products/id - lists a single product
+	// DELETE - deletes a product
 	$(document).on('click', '.delete', function() {
 		var id = $(this).closest('tr').data().id;
 		var row = $(this).closest('tr');
@@ -124,14 +122,35 @@ $(document).ready(function() {
 	})
 
 
-
-	// // PUT /products/id - update a product( hint: use data to update)
-	// $(document).on('click', '.add', function() {
-	// 		var id = $(this).closest('tr').data().id;
-	// 		location.pathname = '/products/' + id + '/edit';
-	// })
-
-
+	// PUT /products/id - update a product( hint: use data to update)
+	$(document).on('click', '.edit', function() {
+		var id = $(this).closest('tr').data().id;
+		console.log('made it!');
+		var form = $('.add-form');
+		var button = $('.add');
+		button.toggleClass('SeeOrHide');
+    if(button.hasClass('SeeOrHide')){
+        button.text('Cancel'); 
+        form.slideDown();
+    } else {
+        button.text('Add Product');
+        form.slideUp(); 
+    }
+		$.ajax({
+			url: baseUrl + '/' + id,
+			type: 'GET',
+			dataType: 'JSON'
+		}).done( function(data) {
+			var product = data.product;
+			console.log(product.name);
+			$('#product_name').val(product.name);
+			$('#product_price').val(product.base_price);
+			$('#product_description').val(product.description);
+			$('#product_quantity').val(product.quanity);
+			$('#product_color').val(product.color);
+			$('#product_weight').val(product.weight);
+		});
+	})
 
 
 })
