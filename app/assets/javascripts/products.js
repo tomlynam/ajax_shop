@@ -9,8 +9,6 @@ $(document).ready(function() {
 	      type: 'GET',
 	      dataType: 'JSON'
 	    }).done( function(data) {
-				var form = $('.add-form');
-				form.slideToggle();
 				var tbody = $('#products');
 	      tbody.children().remove();
 	      data.products.forEach( function(product) {
@@ -80,28 +78,36 @@ $(document).ready(function() {
 		})
 	})
 
-
-	// POST add a product
-	$(document).on('click', '.add', function() {
+	function toggleAddButton() {
 		var form = $('.add-form');
-		var button = $(this);
+		var button = $('.add');
 		button.toggleClass('SeeOrHide');
-    if(button.hasClass('SeeOrHide')){
+    if(button.hasClass('SeeOrHide')) {
         button.text('Cancel'); 
         form.slideDown();
     } else {
         button.text('Add Product');
         form.slideUp(); 
     }
+	}
+
+
+	// POST add a product
+	$(document).on('click', '.add', function() {
+		toggleAddButton();
 		$('#new_product').on('submit', function(e) {
 			e.preventDefault();
+			e.stopImmediatePropagation();
 			$.ajax({
 				url: baseUrl,
 				type: 'POST',
 				dataType: 'JSON',
 				data: $(this).serializeArray()
 			}).done( function() {
-				location.pathname = '/';
+				var form = $('.add-form');
+				$('.form-control').val('');
+				toggleAddButton();
+				getProducts();
 			});
 		})
 	})
@@ -124,17 +130,7 @@ $(document).ready(function() {
 	// PUT /products/id - update a product( hint: use data to update)
 	$(document).on('click', '.edit', function() {
 		var id = $(this).closest('tr').data().id;
-		
-		var form = $('.add-form');
-		var button = $('.add');
-		button.toggleClass('SeeOrHide');
-    if(button.hasClass('SeeOrHide')){
-        button.text('Cancel'); 
-        form.slideDown();
-    } else {
-        button.text('Add Product');
-        form.slideUp(); 
-    }
+		toggleAddButton();
 		$.ajax({
 			url: baseUrl + '/' + id,
 			type: 'GET',
@@ -144,12 +140,11 @@ $(document).ready(function() {
 			$('#product_name').val(product.name);
 			$('#product_price').val(product.base_price);
 			$('#product_description').val(product.description);
-			$('#product_quantity').val(product.quanity);
+			$('#product_quantity').val(product.quanity_on_hand);
 			$('#product_color').val(product.color);
 			$('#product_weight').val(product.weight);
 		});
 		$('#new_product').on('submit', function(e) {
-			console.log('made it!');
 			e.preventDefault();
 			$.ajax({
 				url: baseUrl + '/' + id,
@@ -157,7 +152,10 @@ $(document).ready(function() {
 				dataType: 'JSON',
 				data: $(this).serializeArray()
 			}).done( function() {
-				location.pathname = '/';
+				var form = $('.add-form');
+				$('.form-control').val('');
+				toggleAddButton();
+				getProducts();
 			});
 		});
 	})
